@@ -1,4 +1,4 @@
-const Provider = require('../models/provider');
+const Provider = require('../models/provider.model');
 
 module.exports = {
 

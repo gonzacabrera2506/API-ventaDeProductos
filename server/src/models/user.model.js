@@ -8,12 +8,12 @@ const userSchema = new Schema({
     email: String
 });
 
-//creo el metodo encryptPassword para encriptar password
+//method for encrypt password
 userSchema.methods.encryptPassword = async (password) => {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
 }
-//creo el metodo para validar la contraseña
+//method for validate password
 userSchema.methods.validatePassword = function (password) {
     return bcrypt.compare(password, this.password)
 };

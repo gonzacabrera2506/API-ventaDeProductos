@@ -1,15 +1,15 @@
-const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 
 const app = express();
 
-const articlesRoutes = require('./routes/articles');
-const providersRoutes = require('./routes/providers');
-const usersRoutes = require('./routes/auth');//USERS AUTH
+//const articlesRoutes = require('./routes/articles.routes');
+//const providersRoutes = require('./routes/provider.routes');
+const usersRoutes = require('./routes/auth.routes');//USERS AUTH
+require('dotenv').config();
 
-mongoose.connect('mongodb://localhost/rest-api-ventaDeProductos', {
+mongoose.connect(process.env.MONGO_URI, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 }).then(db => console.log('BD is connected'))
@@ -22,11 +22,11 @@ app.set('port', process.env.PORT || 3000);
 
 //middleware
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(express.json());
 
 //routes
-app.use('/articles', articlesRoutes);
-app.use('/providers', providersRoutes);
+//app.use('/articles', articlesRoutes);
+//app.use('/providers', providersRoutes);
 app.use('/users', usersRoutes);
 
 //static files

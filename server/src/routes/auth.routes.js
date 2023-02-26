@@ -5,18 +5,18 @@ const {
     login,
     getData
 
-} = require('../controllers/auth');
+} = require('../controllers/auth.controller');
 
 //verbos http
 
 //nuevo usuario
 router.post('/', newUser);
 
-//logueo
-router.post('/login', login);
+//login
+//router.post('/login', login);
 
-//obtener info
-router.get('/', getData);
+//get data
+//router.get('/', getData);
 
 
 module.exports = router;
