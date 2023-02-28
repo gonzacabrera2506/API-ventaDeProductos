@@ -1,9 +1,8 @@
 const userService = require('../services/auth.service');
-const user = require('../models/user.model');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
-const { CREATED } = require('../constants/httpStatus');
-const { CREATED_USER, VALID_TOKEN } = require('../constants/auth.messages');
+const { CREATED, NOT_FOUND, UNAUTHORIZED } = require('../constants/httpStatus');
+const { CREATED_USER, VALID_TOKEN, ERROR_LOGIN, LOGIN } = require('../constants/auth.messages');
+require('dotenv').config();
 
 module.exports = {
 
@@ -13,10 +12,9 @@ module.exports = {
         newUser.password = await newUser.encryptPassword(newUser.password);
         await newUser.save();
         //token
-        const token = jwt.sign({ id: newUser._id }, config.secret, {
+        const token = jwt.sign({ id: newUser._id }, process.env.ACCESS_SECRET, {
             expiresIn: 60 * 60 * 24
         })
-
         res.status(CREATED).json({
             msg: CREATED_USER,
             auth: VALID_TOKEN,
@@ -26,39 +24,18 @@ module.exports = {
 
     login: async (req, res) => {
         const { email, password } = req.body;
-        const user = await User.findOne({ email: email });
-        if (!user) {
-            return res.status(404).send("The email doesn't exists");
-        }
-
+        const user = await userService.login(email);
+        if (!user) return res.status(NOT_FOUND).send(ERROR_LOGIN);
         const validPassword = await user.validatePassword(password);
-        if (!validPassword) {
-            return res.status(401).json({ auth: false, token: null });
-        }
+        if (!validPassword) return res.status(UNAUTHORIZED).json({ auth: ERROR_LOGIN, token: null });
         //token
-        const token = jwt.sign({ id: user._id }, config.secret, {
+        const token = jwt.sign({ id: user._id }, process.env.ACCESS_SECRET, {
             expiresIn: 60 * 60 * 24
         })
-
-        res.json({ auth: true, token });
-    },
-
-    getData: async (req, res) => {
-        const token = req.headers['x-access-token'];
-        if (!token) {
-            return res.status(401).json({
-                auth: false,
-                message: 'No token provided'
-            });
-        }
-
-        const decoded = jwt.verify(token, config.secret);
-
-        const user = await User.findById(decoded.id, { password: 0 });
-        if (!user) {
-            return res.status(401).send('No user found');
-        }
-
-        res.json(user);
+        res.json({
+            msg: LOGIN,
+            auth: VALID_TOKEN,
+            token: token
+        });
     }
 }

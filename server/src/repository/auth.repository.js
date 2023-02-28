@@ -6,5 +6,10 @@ module.exports = {
         return new User(
             body
         );
+    },
+
+    login: async (email) => {
+        const user = await User.findOne({ email });
+        return user;
     }
 };

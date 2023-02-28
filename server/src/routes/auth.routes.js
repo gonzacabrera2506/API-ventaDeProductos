@@ -2,21 +2,16 @@ const router= require('express-promise-router')();
 
 const {
     newUser,
-    login,
-    getData
-
+    login
+    
 } = require('../controllers/auth.controller');
 
-//verbos http
 
-//nuevo usuario
+//new user
 router.post('/', newUser);
 
 //login
-//router.post('/login', login);
-
-//get data
-//router.get('/', getData);
+router.post('/login', login);
 
 
 module.exports = router;
