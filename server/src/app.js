@@ -1,13 +1,16 @@
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
+const swaggerUI = require('swagger-ui-express');
 
 const app = express();
 
+require('dotenv').config();
+
+const swaggerSpect = require('./config/swagger-config');
 //const articlesRoutes = require('./routes/articles.routes');
 //const providersRoutes = require('./routes/provider.routes');
-const usersRoutes = require('./routes/auth.routes');//USERS AUTH
-require('dotenv').config();
+const usersRoutes = require('./routes/auth.routes');
 
 mongoose.connect(process.env.MONGO_URI, {
     useUnifiedTopology: true,
@@ -15,6 +18,8 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(db => console.log('BD is connected'))
   .catch(err => console.log(err));
 
+//documentation//
+app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpect));
 
 //settings
 app.set('port', process.env.PORT || 3000);

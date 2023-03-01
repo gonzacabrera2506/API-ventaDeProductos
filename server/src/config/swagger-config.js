@@ -31,5 +31,5 @@ const options = {
     apis: ['./routes/*.js'],
 };
 
-const swaggetSpect = swaggerJsdoc(options);
-module.exports = swaggetSpect;
+const swaggerSpect = swaggerJsdoc(options);
+module.exports = swaggerSpect;
