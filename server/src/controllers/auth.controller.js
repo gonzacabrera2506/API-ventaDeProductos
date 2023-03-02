@@ -1,6 +1,6 @@
 const userService = require('../services/auth.service');
 const jwt = require('jsonwebtoken');
-const { CREATED, NOT_FOUND, UNAUTHORIZED } = require('../constants/httpStatus');
+const { CREATED, NOT_FOUND } = require('../constants/httpStatus');
 const { CREATED_USER, VALID_TOKEN, ERROR_LOGIN, LOGIN } = require('../constants/auth.messages');
 require('dotenv').config();
 
@@ -27,7 +27,7 @@ module.exports = {
         const user = await userService.login(email);
         if (!user) return res.status(NOT_FOUND).send(ERROR_LOGIN);
         const validPassword = await user.validatePassword(password);
-        if (!validPassword) return res.status(UNAUTHORIZED).json({ auth: ERROR_LOGIN, token: null });
+        if (!validPassword) return res.status(NOT_FOUND).json({ auth: ERROR_LOGIN, token: null });
         //token
         const token = jwt.sign({ id: user._id }, process.env.ACCESS_SECRET, {
             expiresIn: 60 * 60 * 24

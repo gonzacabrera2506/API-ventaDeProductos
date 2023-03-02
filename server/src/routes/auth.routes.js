@@ -29,10 +29,9 @@ const {
  *         },
  *        "required": [ "username", "password", "email" ],
  *         "example": {
- *           "username": "Isaias",
+ *           "username": "Gonzalo",
  *           "password": "1234",
- *           "email": "username@email.com",
- *       
+ *           "email": "username@email.com",       
  *         }
  *      }
  *    }
@@ -43,7 +42,7 @@ const {
 /**
  * @swagger
  *{
- *  "/users": {
+ *  "/users/": {
  *    "post": {
  *      "summary": "Create a User",
  *       "requestBody": {
@@ -52,13 +51,12 @@ const {
  *           "application/json": {
  *              "schema": {
  *                "type": "object",
- *                "$ref": "#/models/User"
+ *                "$ref": "#/components/schemas/User"
  *                }
  *            }
  *         }
  *      },
  *      "tags": [ "User" ],
- *      "security":[bearerAuth: []],
  *      "responses": {
  *        "201": { "description": "Created" },
  *        "500": { "description": "Internal server error" }
@@ -69,7 +67,34 @@ const {
  */
 router.post('/', newUser);
 
-//login
+/**
+ * @swagger
+ *{
+ *  "/users/login": {
+ *    "post": {
+ *      "summary": "User Login",
+ *       "requestBody": {
+ *        "required": true,
+ *        "content": {
+ *           "application/json": {
+ *              "schema": {
+ *                "type": "object",
+ *                "$ref": "#/components/schemas/User"
+ *                }
+ *            }
+ *         }
+ *      },
+ *      "tags": [ "User" ],
+ *      "security":[bearerAuth: []],
+ *      "responses": {
+ *        "200": { "description": "OK" },
+ *        "400": { "description": "Not found" },
+ *        "401": { "description": "Unauthorized" }
+ *      }
+ *    }
+ *  }
+ *}
+ */
 router.post('/login', login);
 
 
