@@ -1,5 +1,7 @@
 const router = require('express-promise-router')();
 
+const userValidation = require('../validations/user.validations');
+
 const {
     newUser,
     login
@@ -15,22 +17,27 @@ const {
  *         "type": "object",
  *         "properties": {
  *           "username": {
- *             "type": "string",
- *             "description": "Username of a user"
+ *             "type": "String",
+ *             "description": "Username of a user",
+ *              "Min": "7",
+ *              "Max": "25"
+ * 
  *           },
  *           "password": {
- *             "type": "string",
- *             "description": "password of a user"
+ *             "type": "String",
+ *             "description": "Password of a user",
+ *              "Min": "6",
+ *              "Max": "25"
  *           },
  *           "email": {
- *             "type": "string",
+ *             "type": "String",
  *             "description": "Email of a user"
  *           }
  *         },
  *        "required": [ "username", "password", "email" ],
  *         "example": {
  *           "username": "Gonzalo",
- *           "password": "1234",
+ *           "password": "123456",
  *           "email": "username@email.com",       
  *         }
  *      }
@@ -65,7 +72,7 @@ const {
  *  }
  *}
  */
-router.post('/', newUser);
+router.post('/', userValidation.userSignInIsValid, newUser);
 
 /**
  * @swagger
@@ -89,13 +96,14 @@ router.post('/', newUser);
  *      "responses": {
  *        "200": { "description": "OK" },
  *        "400": { "description": "Not found" },
- *        "401": { "description": "Unauthorized" }
+ *        "401": { "description": "Unauthorized" },
+ *        "422": { "description": "Unprocessable Entity" }
  *      }
  *    }
  *  }
  *}
  */
-router.post('/login', login);
+router.post('/login', userValidation.userLoginIsValid, login);
 
 
 module.exports = router;
